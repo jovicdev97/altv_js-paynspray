@@ -57,3 +57,7 @@ alt.on('gameEntityCreate', (ped) => {
   alt.onServer('wirdGesprayed', (player) => {
     showNotification('CHAR_DEFAULT', 'Info', '', 'This will take 20s');
   })
+
+alt.onServer('notify', () => {
+    showNotification('CHAR_DEFAULT', 'Info', '', 'Bro .. back off !!');
+});
