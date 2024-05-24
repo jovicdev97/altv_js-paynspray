@@ -1,7 +1,23 @@
 /// <reference types="@altv/types-client" />
 import * as alt from 'alt-client';
 import * as native from 'natives';
-import { showNotification } from '../helper/helper.js';
+
+// helper function to show notification
+function showNotification(imageName, headerMsg, detailsMsg, message) {
+  native.beginTextCommandThefeedPost('STRING');
+  native.addTextComponentSubstringPlayerName(message);
+  native.endTextCommandThefeedPostMessagetextTu(
+      imageName.toUpperCase(),
+      imageName.toUpperCase(),
+      false,
+      4,
+      headerMsg,
+      detailsMsg,
+      1.0,
+      ''
+  );
+  native.endTextCommandThefeedPostTicker(false, false);
+}
 
 // colshape
 let isInColshape = false;
@@ -46,20 +62,3 @@ alt.on('gameEntityCreate', (ped) => {
         native.taskPlayAnim(ped, 'rcmjosh1', 'idle', 8, 8, -1, 1, 0, false, false, false);
 /*       }, 0); */
   });
-
-// helper function to show notification
-  function showNotification(imageName, headerMsg, detailsMsg, message) {
-    native.beginTextCommandThefeedPost('STRING');
-    native.addTextComponentSubstringPlayerName(message);
-    native.endTextCommandThefeedPostMessagetextTu(
-        imageName.toUpperCase(),
-        imageName.toUpperCase(),
-        false,
-        4,
-        headerMsg,
-        detailsMsg,
-        1.0,
-        ''
-    );
-    native.endTextCommandThefeedPostTicker(false, false);
-}
