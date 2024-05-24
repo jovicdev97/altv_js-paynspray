@@ -40,7 +40,7 @@ alt.on('keydown', (key) => {
 // edit spawned npc
 alt.on('gameEntityCreate', (ped) => {
     if (!(ped instanceof alt.Ped)) return
-    setInterval(() => {
+/*     setInterval(() => { */
         native.setEntityInvincible(ped, true);
         native.setBlockingOfNonTemporaryEvents(ped, true);
         native.taskStartScenarioInPlace(ped, 'WORLD_HUMAN_COP_IDLES', 0, true);
@@ -51,5 +51,5 @@ alt.on('gameEntityCreate', (ped) => {
           native.setRagdollBlockingFlags(ped, i);
         }
         native.taskPlayAnim(ped, 'rcmjosh1', 'idle', 8, 8, -1, 1, 0, false, false, false);
-      }, 0);
+/*       }, 0); */
   });
