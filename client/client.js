@@ -1,6 +1,7 @@
 /// <reference types="@altv/types-client" />
 import * as alt from 'alt-client';
 import * as native from 'natives';
+import { showNotification } from '../helper/helper.js';
 
 // colshape
 let isInColshape = false;
