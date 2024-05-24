@@ -1,6 +1,7 @@
 /// <reference types="@altv/types-client" />
 import * as alt from 'alt-client';
 import * as native from 'natives';
+import { showNotification } from '../helper/helper.js';
 
 // colshape
 let isInColshape = false;
@@ -46,19 +47,4 @@ alt.on('gameEntityCreate', (ped) => {
 /*       }, 0); */
   });
 
-// helper function to show notification
-  function showNotification(imageName, headerMsg, detailsMsg, message) {
-    native.beginTextCommandThefeedPost('STRING');
-    native.addTextComponentSubstringPlayerName(message);
-    native.endTextCommandThefeedPostMessagetextTu(
-        imageName.toUpperCase(),
-        imageName.toUpperCase(),
-        false,
-        4,
-        headerMsg,
-        detailsMsg,
-        1.0,
-        ''
-    );
-    native.endTextCommandThefeedPostTicker(false, false);
-}
+
