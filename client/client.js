@@ -2,23 +2,6 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 
-// show ingame notification when enter colshape
-function showNotification(imageName, headerMsg, detailsMsg, message) {
-    native.beginTextCommandThefeedPost('STRING');
-    native.addTextComponentSubstringPlayerName(message);
-    native.endTextCommandThefeedPostMessagetextTu(
-        imageName.toUpperCase(),
-        imageName.toUpperCase(),
-        false,
-        4,
-        headerMsg,
-        detailsMsg,
-        1.0,
-        ''
-    );
-    native.endTextCommandThefeedPostTicker(false, false);
-}
-
 // colshape
 let isInColshape = false;
 
@@ -37,7 +20,16 @@ alt.on('keydown', (key) => {
     }
 });
 
-// edit spawned npc
+// spray notifications
+alt.onServer('wirdGesprayed', (player) => {
+    showNotification('CHAR_DEFAULT', 'Info', '', 'This will take 20s');
+  })
+
+alt.onServer('notify', () => {
+    showNotification('CHAR_DEFAULT', 'Info', '', 'Bro .. back off !!');
+});
+
+// edit spray npc
 alt.on('gameEntityCreate', (ped) => {
     if (!(ped instanceof alt.Ped)) return
 /*     setInterval(() => { */
@@ -54,10 +46,19 @@ alt.on('gameEntityCreate', (ped) => {
 /*       }, 0); */
   });
 
-  alt.onServer('wirdGesprayed', (player) => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'This will take 20s');
-  })
-
-alt.onServer('notify', () => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'Bro .. back off !!');
-});
+// helper function to show notification
+  function showNotification(imageName, headerMsg, detailsMsg, message) {
+    native.beginTextCommandThefeedPost('STRING');
+    native.addTextComponentSubstringPlayerName(message);
+    native.endTextCommandThefeedPostMessagetextTu(
+        imageName.toUpperCase(),
+        imageName.toUpperCase(),
+        false,
+        4,
+        headerMsg,
+        detailsMsg,
+        1.0,
+        ''
+    );
+    native.endTextCommandThefeedPostTicker(false, false);
+}
