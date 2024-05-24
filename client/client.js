@@ -26,10 +26,9 @@ alt.onServer('entityEnterColshape', () => {
     showNotification('CHAR_DEFAULT', 'Info', '', 'Press E to change your vehicle color and numberplate');
     isInColshape = true;
 });
-/* alt.onServer('entityLeaveColshape', () => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'Jää ... Hau rein ...');
+alt.onServer('entityLeaveColshape', () => {
     isInColshape = false;
-}); */
+});
 
 // key press from player
 alt.on('keydown', (key) => {
