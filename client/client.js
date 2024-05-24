@@ -2,6 +2,7 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 
+// show ingame notification when enter colshape
 function showNotification(imageName, headerMsg, detailsMsg, message) {
     native.beginTextCommandThefeedPost('STRING');
     native.addTextComponentSubstringPlayerName(message);
@@ -18,10 +19,21 @@ function showNotification(imageName, headerMsg, detailsMsg, message) {
     native.endTextCommandThefeedPostTicker(false, false);
 }
 
-alt.onServer('entityEnterColshape', () => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'Jää ... komm näher ...');
-});
+// colshape
+let isInColshape = false;
 
-alt.onServer('entityLeaveColshape', () => {
+alt.onServer('entityEnterColshape', () => {
+    showNotification('CHAR_DEFAULT', 'Info', '', 'Press E to change your vehicle color and numberplate');
+    isInColshape = true;
+});
+/* alt.onServer('entityLeaveColshape', () => {
     showNotification('CHAR_DEFAULT', 'Info', '', 'Jää ... Hau rein ...');
+    isInColshape = false;
+}); */
+
+// key press from player
+alt.on('keydown', (key) => {
+    if (key === 69 && isInColshape) { 
+        alt.emitServer('playerPressedButtonE');
+    }
 });
