@@ -24,21 +24,25 @@ try {
             }
         });
 
-        alt.onClient('playerPressedButtonE', (player) => {
-            const vehicle = player.vehicle;
-            if (!vehicle) return;
-            alt.emitClient(player, 'wirdGesprayed'); //for Notification
-            alt.on('playerLeftVehicle', (player) => { // we want player to leave vehicle
-                vehicle.frozen = true;
-                vehicle.engineOn = false;
-                alt.setTimeout(() => {
-                    vehicle.numberPlateText = generateRandomString();
-                    vehicle.primaryColor = generateRandomNumberBetween1and159();
-                    vehicle.secondaryColor = generateRandomNumberBetween1and159();
-                    vehicle.dirtLevel = 15; //will make the car very dirty after work for police rp
-                    vehicle.frozen = false;
-                }, 3000); //debugging : should change to notification value
-            });
+        alt.onClient('playerPressedButtonE', async (player) => {
+            try {
+                const vehicle = player.vehicle;
+                if (!vehicle) return;
+                alt.emitClient(player, 'wirdGesprayed'); // for Notification
+                alt.on('playerLeftVehicle', (player) => { // we want player to leave vehicle
+                    vehicle.frozen = true;
+                    vehicle.engineOn = false;
+                    alt.setTimeout(() => {
+                        vehicle.numberPlateText = generateRandomString();
+                        vehicle.primaryColor = generateRandomNumberBetween1and159();
+                        vehicle.secondaryColor = generateRandomNumberBetween1and159();
+                        vehicle.dirtLevel = 15; // will make the car very dirty after work for police rp
+                        vehicle.frozen = false;
+                    }, 10000); // debugging: should change to notification value
+                });
+            } catch (error) {
+                console.error(error);
+            }
         });
         
     } else {
