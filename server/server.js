@@ -26,12 +26,21 @@ try {
 
         alt.onClient('playerPressedButtonE', (player) => {
             const vehicle = player.vehicle;
-                if (!vehicle) {return}
-                vehicle.numberPlateText = generateRandomString();
-                vehicle.primaryColor = generateRandomNumberBetween1and159();
-                vehicle.secondaryColor = generateRandomNumberBetween1and159();
-            
+            if (!vehicle) return;
+            alt.emitClient(player, 'wirdGesprayed'); //for Notification
+            alt.on('playerLeftVehicle', (player) => { // we want player to leave vehicle
+                vehicle.frozen = true;
+                vehicle.engineOn = false;
+                alt.setTimeout(() => {
+                    vehicle.numberPlateText = generateRandomString();
+                    vehicle.primaryColor = generateRandomNumberBetween1and159();
+                    vehicle.secondaryColor = generateRandomNumberBetween1and159();
+                    vehicle.dirtLevel = 15; //will make the car very dirty after work for police rp
+                    vehicle.frozen = false;
+                }, 3000); //debugging : should change to notification value
+            });
         });
+        
     } else {
         console.error("error spawn");
     }

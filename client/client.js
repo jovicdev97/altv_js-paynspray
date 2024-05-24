@@ -53,3 +53,7 @@ alt.on('gameEntityCreate', (ped) => {
         native.taskPlayAnim(ped, 'rcmjosh1', 'idle', 8, 8, -1, 1, 0, false, false, false);
 /*       }, 0); */
   });
+
+  alt.onServer('wirdGesprayed', (player) => {
+    showNotification('CHAR_DEFAULT', 'Info', '', 'This will take 20s');
+  })
