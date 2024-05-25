@@ -49,16 +49,17 @@ alt.onServer('notify', () => {
 // edit spray npc
 alt.on('gameEntityCreate', (ped) => {
     if (!(ped instanceof alt.Ped)) return
-/*     setInterval(() => { */
+    alt.setTimeout(() => {
         native.setEntityInvincible(ped, true);
         native.setBlockingOfNonTemporaryEvents(ped, true);
         native.taskStartScenarioInPlace(ped, 'WORLD_HUMAN_COP_IDLES', 0, true);
         native.taskSetBlockingOfNonTemporaryEvents(ped, true);
         native.setEntityProofs(ped, true, true, true, true, true, true, true, true);
         native.setPedTreatedAsFriendly(ped, 1, 0);
+        native.setPedFleeAttributes(npc, 15, true);
         for (let i = 0; i < 17; i++) {
           native.setRagdollBlockingFlags(ped, i);
         }
         native.taskPlayAnim(ped, 'rcmjosh1', 'idle', 8, 8, -1, 1, 0, false, false, false);
-/*       }, 0); */
+    }, 500)
   });
