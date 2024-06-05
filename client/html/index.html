@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- temporary (will add some more vue stuff later) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      perspective: 1000px;
+    }
+
+    .hud {
+      padding: 2rem;
+      border-radius: 0.5rem;
+      transform: rotateX(20deg) rotateY(10deg);
+      text-align: center;
+      color: #fff;
+      animation: float 6s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes float {
+      0% { transform: rotateX(20deg) rotateY(10deg) translateY(0px); }
+      50% { transform: rotateX(20deg) rotateY(10deg) translateY(-20px); }
+      100% { transform: rotateX(20deg) rotateY(10deg) translateY(0px); }
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.1rem;
+      position: relative;
+      color: white;
+      text-shadow: 1px 1px 0 red, -1px -1px 0 blue;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      z-index: 1;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: relative;
+      overflow: hidden;
+      background-color: #d32f2f;
+      color: #fff;
+      text-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 1rem rgba(255, 255, 255, 0.3);
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: 0.5s;
+    }
+
+    .btn:hover::before { left: 100%; }
+
+    .additional-content p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+      text-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.5);
+    }
+
+    .character-container {
+      position: absolute;
+      top: -29.5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: auto;
+      z-index: -1;
+    }
+
+    .additional-content {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 3rem 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 1rem rgba(255, 255, 255, 0.3);
+      text-align: center;
+      color: #fff;
+      position: relative;
+      z-index: 0;
+    }
+
+    .character {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <div class="hud">
+      <h1 data-text="Paint n' Spray">Paint n' Spray</h1>
+      <div class="buttons">
+        <button class="btn" @click="spray">
+          <span>Spray</span>
+        </button>
+        <button class="btn" @click="numberplate">
+          <span>Numberplate</span>
+        </button>
+        <button class="btn" @click="exit">
+          <span>Exit</span>
+        </button>
+      </div>
+      <div class="character-container">
+        <img src="../assets/render.png" alt="GTA Character" class="character">
+      </div>
+      <div class="additional-content">
+        <p>Yo Pal ... need help with the car?</p>
+        <p>I can handle it for a few bucks, but it won't come cheap, you know?</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      methods: {
+        spray() {
+          console.log('Spray button clicked');
+          alt.emit('sprayVehicleFromWebview');
+        },
+        numberplate() {
+          console.log('Numberplate button clicked');
+          alt.emit('changeNumberPlateFromFromWebview');
+        },
+        exit() {
+          if (typeof alt !== 'undefined') {
+            alt.emit('closeWebView');
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
