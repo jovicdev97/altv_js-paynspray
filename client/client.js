@@ -16,8 +16,60 @@ function playLocalSound(filePath, volume = 1) {
     audio.play();
 }
 
+function createWebView(url) {
+    if (webview) return;
+    webview = new alt.WebView(url, true);
+    console.log('Webview loaded on client');
+    webview.focus();
+    alt.showCursor(true);
+    alt.toggleGameControls(false);
+    alt.toggleVoiceControls(false);
+    playLocalSound('/client/assets/wav/yo_pal.mp3');
 
+    webview.on('sprayVehicleFromWebview', () => {
+        alt.emitServer('sprayVehicleFromWebviewClientEvent');
+        playLocalSound('/client/assets/wav/after_accept.mp3');
+        showNotification('CHAR_DEFAULT', 'Info', '', 'Leave your car and let the mechanics cook.');
+    });
 
+    webview.on('changeNumberPlateFromFromWebview', () => {
+        alt.emitServer('changeNumberPlateFromFromWebview');
+        playLocalSound('/client/assets/wav/after_accept.mp3');
+        showNotification('CHAR_DEFAULT', 'Info', '', 'Leave your car and let the mechanics cook.');
+    });
+
+    webview.on('closeWebView', () => {
+        destroyWebView();
+    });
+}
+
+function destroyWebView() {
+    if (!webview) return;
+    alt.showCursor(false);
+    alt.toggleGameControls(true);
+    alt.toggleVoiceControls(true);
+    webview.destroy();
+    webview = null;
+    
+    if (audio) {
+        audio.destroy();
+        audio = null;
+    }
+}
+
+alt.on('keydown', (key) => {
+    if (key === 69 && isInColshape) { 
+        alt.emitServer('playerPressedButtonE');
+    }
+});
+
+alt.onServer('openWebView', (url) => {
+    createWebView(url);
+});
+
+alt.onServer('closeWebView', () => {
+    destroyWebView();
+});
 
 alt.onServer('entityEnterColshape', () => {
     showNotification('CHAR_DEFAULT', 'Info', '', 'Press E to change your vehicle color and numberplate');
@@ -57,3 +109,19 @@ alt.on('gameEntityCreate', (ped) => {
         native.taskPlayAnim(ped, 'rcmjosh1', 'idle', 8, 8, -1, 1, 0, false, false, false);
     }, 500)
 });
+
+function showNotification(imageName, headerMsg, detailsMsg, message) {
+    native.beginTextCommandThefeedPost('STRING');
+    native.addTextComponentSubstringPlayerName(message);
+    native.endTextCommandThefeedPostMessagetextTu(
+        imageName.toUpperCase(),
+        imageName.toUpperCase(),
+        false,
+        4,
+        headerMsg,
+        detailsMsg,
+        1.0,
+        ''
+    );
+    native.endTextCommandThefeedPostTicker(false, false);
+}
