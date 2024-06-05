@@ -1,12 +1,19 @@
 /// <reference types="@altv/types-server" />
 import * as alt from 'alt-server';
-import { generateRandomNumberBetween1and159, generateRandomString } from '../helper/helper.js';
+import { generateRandomNumberBetween1and159, generateRandomString } from '../../npc-para/helper/helper.js';
 
-const npcPosition = new alt.Vector3(-833.1956, -398.9011, 31.3187);
+const webviewUrl = "http://resource/client/html/index.html";
 
-try {
-    const npc = new alt.Ped('u_m_m_streetart_01', npcPosition, 0);
-    if (npc) {
+const createNPC = () => {
+    const npcPosition = new alt.Vector3(-833.1956, -398.9011, 31.3187);
+
+    try {
+        const npc = new alt.Ped('S_M_Y_PestCont_01', npcPosition, 0);
+        if (!npc) {
+            console.error('Error: NPC could not be created.');
+            return;
+        }
+        
         npc.frozen = true;
         const colShape = new alt.ColshapeCircle(npcPosition.x, npcPosition.y, 5);
         npc.setMeta('colshape', colShape);
@@ -24,49 +31,73 @@ try {
             }
         });
 
-        alt.onClient('playerPressedButtonE', async (player) => {
-            try {
-                const hasPainted = player.getMeta('hasPainted');
-                if (hasPainted) {
-                    alt.emitClient(player, 'notify');
-                    return;
-                }
-                const vehicle = player.vehicle;
-                if (!vehicle) return;
-    
-                player.setMeta('hasPainted', true);                // add meta to player
-                alt.emitClient(player, 'wirdGesprayed');           // for Notification
-
-                /* 
-                # Add the listener as a arrow function 
-                # This will help to avoid event stacking such as when the player hit multiple times E
-                # and the event will be called multiple times
-                */
-
-                const handlePlayerLeftVehicle = (playerLeavingVehicle) => {
-                    if (playerLeavingVehicle === player) {
-                        vehicle.frozen = true;
-                        vehicle.engineOn = false;
-                        vehicle.lockState = 2;
-                        alt.setTimeout(() => {
-                            vehicle.numberPlateText = generateRandomString();
-                            vehicle.primaryColor = generateRandomNumberBetween1and159();
-                            vehicle.secondaryColor = generateRandomNumberBetween1and159();
-                            vehicle.dirtLevel = 15; // will make the car very dirty after work for police rp
-                            vehicle.frozen = false;
-                            vehicle.lockState = 1;
-                        }, 10000); // debugging: should change to notification value
-                        alt.off('playerLeftVehicle', handlePlayerLeftVehicle); // remove the listener to avoid event stacking
-                    }
-                };
-                alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
-            } catch (error) {
-                console.error(error);
-            }
-        });
-    } else {
-        console.error("error");
+        alt.onClient('playerPressedButtonE', handlePlayerPressButtonE);
+        alt.onClient('sprayVehicleFromWebviewClientEvent', sprayVehicle);
+        alt.onClient('changeNumberPlateFromFromWebview', changeNumberPlate);
+        alt.onClient('closeWebView', closeWebView);
+    } catch (error) {
+        console.error(error);
     }
-} catch (error) {
-    console.error(error);
-}
+};
+
+const handlePlayerPressButtonE = async (player) => {
+    try {
+        const hasPainted = player.getMeta('hasPainted');
+        if (hasPainted) {
+            alt.emitClient(player, 'notify');
+            return;
+        }
+
+        const vehicle = player.vehicle;
+        if (!vehicle) return;
+        alt.emitClient(player, 'openWebView', webviewUrl);
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+const resetVehicle = (vehicle, player) => {
+    vehicle.frozen = true;
+    vehicle.engineOn = false;
+    vehicle.lockState = 2;
+    alt.emitClient(player, 'startwork');
+    alt.setTimeout(() => {
+        vehicle.numberPlateText = generateRandomString();
+        vehicle.primaryColor = generateRandomNumberBetween1and159();
+        vehicle.secondaryColor = generateRandomNumberBetween1and159();
+        vehicle.dirtLevel = 15;
+        vehicle.frozen = false;
+        vehicle.lockState = 1;
+        alt.emitClient(player, 'finishcar');
+    }, 15000);
+};
+
+
+const sprayVehicle = (player) => {
+    const vehicle = player.vehicle;
+    if (!vehicle) return;
+
+    const handlePlayerLeftVehicle = (playerLeavingVehicle) => {
+        if (playerLeavingVehicle === player) {
+            player.setMeta('hasPainted', true);
+            resetVehicle(vehicle, player);
+            alt.off('playerLeftVehicle', handlePlayerLeftVehicle);
+        }
+    };
+    alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
+};
+
+const changeNumberPlate = (player) => {
+    const vehicle = player.vehicle;
+    if (vehicle) {
+        vehicle.numberPlateText = generateRandomString();
+    }
+};
+
+const closeWebView = (player) => {
+    alt.emitClient(player, 'closeWebView');
+};
+
+createNPC();
