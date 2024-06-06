@@ -57,23 +57,29 @@ const handlePlayerPressButtonE = async (player) => {
     }
 };
 
-
 const resetVehicle = (vehicle, player) => {
-    vehicle.frozen = true;
-    vehicle.engineOn = false;
-    vehicle.lockState = 2;
-    alt.emitClient(player, 'startwork');
-    alt.setTimeout(() => {
-        vehicle.numberPlateText = generateRandomString();
-        vehicle.primaryColor = generateRandomNumberBetween1and159();
-        vehicle.secondaryColor = generateRandomNumberBetween1and159();
-        vehicle.dirtLevel = 15;
-        vehicle.frozen = false;
-        vehicle.lockState = 1;
-        alt.emitClient(player, 'finishcar');
-    }, 15000);
+    try {
+        vehicle.frozen = true;
+        vehicle.engineOn = false;
+        vehicle.lockState = 2;
+        alt.emitClient(player, 'startwork');
+        alt.setTimeout(() => {
+            try {
+                vehicle.numberPlateText = generateRandomString();
+                vehicle.primaryColor = generateRandomNumberBetween1and159();
+                vehicle.secondaryColor = generateRandomNumberBetween1and159();
+                vehicle.dirtLevel = 15;
+                vehicle.frozen = false;
+                vehicle.lockState = 1;
+                alt.emitClient(player, 'finishcar');
+            } catch (error) {
+                console.error(error);
+            }
+        }, 15000);
+    } catch (error) {
+        console.error(error);
+    }
 };
-
 
 const sprayVehicle = (player) => {
     const vehicle = player.vehicle;
@@ -86,18 +92,31 @@ const sprayVehicle = (player) => {
             alt.off('playerLeftVehicle', handlePlayerLeftVehicle);
         }
     };
-    alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
+
+    try {
+        alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 const changeNumberPlate = (player) => {
     const vehicle = player.vehicle;
     if (vehicle) {
-        vehicle.numberPlateText = generateRandomString();
+        try {
+            vehicle.numberPlateText = generateRandomString();
+        } catch (error) {
+            console.error(error);
+        }
     }
 };
 
 const closeWebView = (player) => {
-    alt.emitClient(player, 'closeWebView');
+    try {
+        alt.emitClient(player, 'closeWebView');
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 createNPC();
