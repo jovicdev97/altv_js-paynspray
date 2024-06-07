@@ -41,6 +41,7 @@ const createNPC = () => {
 };
 
 const handlePlayerPressButtonE = async (player) => {
+    if (!isInColshape) return;
     try {
         const hasPainted = player.getMeta('hasPainted');
         if (hasPainted) {
@@ -95,12 +96,17 @@ const sprayVehicle = (player) => {
 
     try {
         alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
+
+        const handlePlayerLeaveColshape = () => {
+            alt.off('playerLeftVehicle', handlePlayerLeftVehicle);
+        };
+        alt.on('entityLeaveColshape', handlePlayerLeaveColshape);
     } catch (error) {
         console.error(error);
     }
 };
 
-const changeNumberPlate = (player) => {
+/* const changeNumberPlate = (player) => {
     const vehicle = player.vehicle;
     if (vehicle) {
         try {
@@ -109,7 +115,7 @@ const changeNumberPlate = (player) => {
             console.error(error);
         }
     }
-};
+}; */
 
 const closeWebView = (player) => {
     try {
