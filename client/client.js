@@ -38,14 +38,14 @@ function createWebView(url) {
         webview.on('sprayVehicleFromWebview', () => {
             alt.emitServer('sprayVehicleFromWebviewClientEvent');
             playLocalSound('/client/assets/wav/after_accept.mp3');
-            showNotification('CHAR_DEFAULT', 'Info', '', 'Leave your car and let the mechanics cook.');
+            showNotification('CHAR_LS_CUSTOMS', 'Pay n Spray', '', 'Leave your car and let the mechanics cook.');
         });
 
-        webview.on('changeNumberPlateFromFromWebview', () => {
+/*         webview.on('changeNumberPlateFromFromWebview', () => {
             alt.emitServer('changeNumberPlateFromFromWebview');
             playLocalSound('/client/assets/wav/after_accept.mp3');
             showNotification('CHAR_DEFAULT', 'Info', '', 'Leave your car and let the mechanics cook.');
-        });
+        }); */
 
         webview.on('closeWebView', () => {
             destroyWebView();
@@ -92,7 +92,7 @@ alt.onServer('closeWebView', () => {
 });
 
 alt.onServer('entityEnterColshape', () => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'Press E to change your vehicle color and numberplate');
+    showNotification('CHAR_LS_CUSTOMS', 'Info', '', 'Press E to change your vehicle color and numberplate');
     isInColshape = true;
 });
 
@@ -101,7 +101,7 @@ alt.onServer('entityLeaveColshape', () => {
 });
 
 alt.onServer('notify', () => {
-    showNotification('CHAR_DEFAULT', 'Info', '', 'This car is too hot for the mechanic. You should leave this place.');
+    showNotification('CHAR_BLOCKED', 'Pay n Spray', '', 'This car is too hot for the mechanic. You should leave this place.');
     playLocalSound('/client/assets/wav/go_away.mp3');
 });
 
@@ -153,3 +153,7 @@ function showNotification(imageName, headerMsg, detailsMsg, message) {
         console.error(error);
     }
 }
+
+
+const marker = new alt.Marker(36, new alt.Vector3(-833.1956, -398.9011, 32.5187), new alt.RGBA(255, 204, 0, 50), true, 100.0);
+marker.rotate = true;

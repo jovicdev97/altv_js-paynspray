@@ -131,10 +131,7 @@
       <h1 data-text="Paint n' Spray">Paint n' Spray</h1>
       <div class="buttons">
         <button class="btn" @click="spray">
-          <span>Spray</span>
-        </button>
-        <button class="btn" @click="numberplate">
-          <span>Numberplate</span>
+          <span>Help me out!</span>
         </button>
         <button class="btn" @click="exit">
           <span>Exit</span>
@@ -158,10 +155,10 @@
           console.log('Spray button clicked');
           alt.emit('sprayVehicleFromWebview');
         },
-        numberplate() {
+/*         numberplate() {
           console.log('Numberplate button clicked');
           alt.emit('changeNumberPlateFromFromWebview');
-        },
+        }, */
         exit() {
           if (typeof alt !== 'undefined') {
             alt.emit('closeWebView');

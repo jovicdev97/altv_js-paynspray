@@ -1,12 +1,12 @@
 /// <reference types="@altv/types-server" />
 import * as alt from 'alt-server';
 import { generateRandomNumberBetween1and159, generateRandomString } from '../../npc-para/helper/helper.js';
+import { Vector3 } from 'alt-shared';
 
 const webviewUrl = "http://resource/client/html/index.html";
 
 const createNPC = () => {
     const npcPosition = new alt.Vector3(-833.1956, -398.9011, 31.3187);
-
     try {
         const npc = new alt.Ped('S_M_Y_PestCont_01', npcPosition, 0);
         if (!npc) {
@@ -33,7 +33,7 @@ const createNPC = () => {
 
         alt.onClient('playerPressedButtonE', handlePlayerPressButtonE);
         alt.onClient('sprayVehicleFromWebviewClientEvent', sprayVehicle);
-        alt.onClient('changeNumberPlateFromFromWebview', changeNumberPlate);
+/*         alt.onClient('changeNumberPlateFromFromWebview', changeNumberPlate); */
         alt.onClient('closeWebView', closeWebView);
     } catch (error) {
         console.error(error);
