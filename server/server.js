@@ -41,7 +41,6 @@ const createNPC = () => {
 };
 
 const handlePlayerPressButtonE = async (player) => {
-    if (!isInColshape) return;
     try {
         const hasPainted = player.getMeta('hasPainted');
         if (hasPainted) {
